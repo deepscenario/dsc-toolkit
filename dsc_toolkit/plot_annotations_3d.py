@@ -24,6 +24,7 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
     frame_idx = 0
     visuals_curr = []
     pbar = tqdm(total=len(frames_df), desc='Visualizing frames', unit='frame')
+    anns_df_grouped = anns_df.groupby('frame_id')
 
     def animate_fn(event: vedo.plotter.Event) -> None:
         nonlocal frame_idx
@@ -32,21 +33,34 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
             return
 
         frame_dict = frames_df.iloc[frame_idx]
-        anns_frame_df = anns_df[anns_df['frame_id'] == frame_dict['frame_id']]
+        frame_id = frame_dict['frame_id']
 
         plotter.remove(visuals_curr)
         visuals_curr.clear()
-        visuals_curr.append(vedo.Text2D(f'Frame id: {frame_dict["frame_id"]}'))
-        for _, ann in anns_frame_df.iterrows():
-            visuals_curr.extend(get_ann_visuals(ann.to_dict()))
+        visuals_curr.append(vedo.Text2D(f'Frame id: {frame_id}'))
+
+        if frame_id in anns_df_grouped.groups:
+            anns_frame_df = anns_df_grouped.get_group(frame_id)
+            anns_visuals = [
+                get_ann_visuals(track_id, translation, rotation, dimension)
+                for track_id, translation, rotation, dimension in zip(
+                    anns_frame_df['track_id'],
+                    anns_frame_df[['translation_x', 'translation_y', 'translation_z']].to_numpy(),
+                    anns_frame_df[['rotation_x', 'rotation_y', 'rotation_z']].to_numpy(),
+                    anns_frame_df[['dimension_x', 'dimension_y', 'dimension_z']].to_numpy(),
+                )
+            ]
+            visuals_curr.extend(anns_visuals)
+
         plotter.add(visuals_curr)
 
         if plotter._interactive:
             plotter.render()
 
         if save_dir is not None:
-            img_fname = f'{frame_dict["frame_id"]}.png'
+            img_fname = f'{frame_id}.png'
             vedo.screenshot(os.path.join(save_dir, img_fname))
+
         frame_idx += 1
         pbar.update(1)
 

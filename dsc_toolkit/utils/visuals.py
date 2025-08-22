@@ -1,5 +1,3 @@
-from typing import Any
-
 import numpy as np
 import vedo
 
@@ -12,11 +10,8 @@ def get_coordinate_frame() -> vedo.Arrows:
     return arrows
 
 
-def get_ann_visuals(ann_dict: dict[str, Any]) -> list:
-    transform = vedo.LinearTransform(
-        get_transform([ann_dict['translation_x'], ann_dict['translation_y'], ann_dict['translation_z']],
-                      [ann_dict['rotation_x'], ann_dict['rotation_y'], ann_dict['rotation_z']]))
-    dimension = np.array([ann_dict['dimension_x'], ann_dict['dimension_y'], ann_dict['dimension_z']])
+def get_ann_visuals(track_id: int, translation: np.ndarray, rotation: np.ndarray, dimension: np.ndarray) -> list:
+    transform = vedo.LinearTransform(get_transform(translation, rotation))
     center = np.array([0, 0, 0.5]) * dimension
 
     color = np.array([172, 133, 241], np.uint8) / 255
@@ -41,7 +36,7 @@ def get_ann_visuals(ann_dict: dict[str, Any]) -> list:
         'justify': 'center',
         'font': 'VictorMono'
     }
-    label = box.caption(txt=str(ann_dict['track_id']), **caption_kwargs)
+    label = box.caption(txt=str(track_id), **caption_kwargs)
 
     perimeter_kwargs = {'c': color, 'lw': 2}
     perimeter_start = np.asarray([
