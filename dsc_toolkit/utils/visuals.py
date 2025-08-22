@@ -39,7 +39,7 @@ def get_ann_visuals(track_id: int, translation: np.ndarray, rotation: np.ndarray
     label = box.caption(txt=str(track_id), **caption_kwargs)
 
     perimeter_kwargs = {'c': color, 'lw': 2}
-    perimeter_start = np.asarray([
+    perimeter_start = np.array([
         [0.5, 0.5, 1],
         [0.5, 0.5, 0],
         [0.5, -0.5, 0],
@@ -52,7 +52,7 @@ def get_ann_visuals(track_id: int, translation: np.ndarray, rotation: np.ndarray
         [0.5, -0.5, 1],
         [-0.5, -0.5, 0],
     ]) * dimension
-    perimeter_end = np.asarray([
+    perimeter_end = np.array([
         [0.5, 0.5, 0],
         [0.5, -0.5, 0],
         [0.5, -0.5, 1],
@@ -66,8 +66,8 @@ def get_ann_visuals(track_id: int, translation: np.ndarray, rotation: np.ndarray
         [0.5, -0.5, 0],
     ]) * dimension
     perimeter = vedo.Lines(
-        start_pts=np.array(perimeter_start),
-        end_pts=np.array(perimeter_end),
+        start_pts=perimeter_start,
+        end_pts=perimeter_end,
         **perimeter_kwargs,
     ).apply_transform(transform)
 
