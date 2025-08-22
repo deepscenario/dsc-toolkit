@@ -9,7 +9,14 @@ from dsc_toolkit.utils.geospatial import get_utm_crs
 from dsc_toolkit.utils.io import load_data_meta
 
 
-def get_orthographic_intrinsics(bound_min: np.ndarray, bound_max: np.ndarray, pixel_size: float) -> dict:
+def get_orthographic_intrinsics(
+    bound_min: np.ndarray,
+    bound_max: np.ndarray,
+    pixel_size: float,
+    near_offset: float,
+) -> dict:
+    assert near_offset > 0 and pixel_size > 0
+
     width = int((bound_max[0] - bound_min[0]) / pixel_size)
     height = int((bound_max[1] - bound_min[1]) / pixel_size)
 
@@ -20,14 +27,15 @@ def get_orthographic_intrinsics(bound_min: np.ndarray, bound_max: np.ndarray, pi
         'right': bound_max[0],
         'bottom': bound_min[1],
         'top': bound_max[1],
-        'near': 0.,
-        'far': bound_max[2] - bound_min[2]
+        'near': near_offset,
+        'far': bound_max[2] - bound_min[2] + near_offset
     }
 
 
-def get_orthographic_look_at(bound_max: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    # Camera position slightly above the highest point
-    camera_position = np.array([0., 0., bound_max[2] + 1.])
+def get_orthographic_look_at(bound_max: np.ndarray, near_offset: float) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    assert near_offset > 0
+
+    camera_position = np.array([0., 0., bound_max[2] + near_offset])
     target = np.array([0., 0., bound_max[2]])
     up = np.array([0., 1., 0.])
     return target, camera_position, up
@@ -38,10 +46,11 @@ def render_orthographic_image(
     bound_min: np.ndarray,
     bound_max: np.ndarray,
     pixel_size: float,
+    near_offset: float = 1,
 ) -> np.ndarray:
     # create renderer with orthophoto camera intrinsics and extrinsics
-    intrinsics = get_orthographic_intrinsics(bound_min, bound_max, pixel_size)
-    center, eye, up = get_orthographic_look_at(bound_max)
+    intrinsics = get_orthographic_intrinsics(bound_min, bound_max, pixel_size, near_offset)
+    center, eye, up = get_orthographic_look_at(bound_max, near_offset)
 
     renderer = o3d.visualization.rendering.OffscreenRenderer(width=intrinsics['width'], height=intrinsics['height'])
     renderer.scene.camera.set_projection(
