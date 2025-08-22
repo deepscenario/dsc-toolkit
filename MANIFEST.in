@@ -1,0 +1,7 @@
+# Include documentation
+include README.md
+include LICENSE.txt
+
+# Include configuration files
+include pyproject.toml
+include uv.lock

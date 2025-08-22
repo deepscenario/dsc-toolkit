@@ -1,0 +1,32 @@
+{
+    "dataset_name": "mighty-tests",
+    "dataset_version": "1",
+    "interface_version": "1.0",
+    "reference_utm": {
+        "zone": [
+            17,
+            "N"
+        ],
+        "offset": [
+            552208.0,
+            4114742.0,
+            0.0
+        ]
+    },
+    "frame_rate": 29.97002997003,
+    "frame_distance": 2,
+    "categories": [
+        "car",
+        "pickup"
+    ],
+    "locations": [
+        {
+            "id": 1,
+            "latitude": 37.176445,
+            "longitude": -80.412075,
+            "recordings": [
+                "2000-12-31T23-59-59"
+            ]
+        }
+    ]
+}

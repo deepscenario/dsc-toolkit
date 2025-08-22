@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install system dependencies for offscreen rendering
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libsm6 \
+          libxext6 \
+          libgl1-mesa-dev \
+          libgl1-mesa-dri \
+          xvfb
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
+      with:
+        version: "latest"
+
+    - name: Set up Python ${{ matrix.python-version }}
+      run: uv python install ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        uv sync --dev
+
+    - name: Run pre-commit hooks with virtual display
+      run: |
+        Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+        export DISPLAY=:99.0
+        uv run pre-commit run --all-files --show-diff-on-failure --verbose --hook-stage pre-commit --hook-stage pre-push

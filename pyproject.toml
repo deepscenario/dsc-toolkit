@@ -1,0 +1,89 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dsc-toolkit"
+description = "DeepScenario Toolkit for visualizing and working with DeepScenario datasets"
+authors = [
+    {name = "DeepScenario", email = "info@deepscenario.com"},
+]
+dynamic = ["version"]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+keywords = ["deepscenario", "3d", "visualization", "traffic", "autonomous-driving", "computer-vision"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "numpy (>=1.22,<2.0)",
+    "pandas (>=1.3.0,<3.0)",
+    "pyarrow (>=20.0,<21.0)",
+    "matplotlib (>=3.9.0,<4.0)",
+    "vedo (>=2025.5.3)",
+    "rasterio (>=1.3,<2.0)",
+    "folium (>=0.20,<1)",
+    "tqdm (>=4.66,<5.0)",
+    "pyproj (>=3.6,<4.0)",
+    "open3d (>=0.19,<1.0)",
+    "opendrive2lanelet==1.2.1",
+]
+
+[project.urls]
+Homepage = "https://app.deepscenario.com"
+Documentation = "https://github.com/deepscenario/dsc-toolkit#readme"
+Repository = "https://github.com/deepscenario/dsc-toolkit"
+"Bug Tracker" = "https://github.com/deepscenario/dsc-toolkit/issues"
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "pre-commit",
+    "mypy",
+    "ruff",
+    "yapf",
+    "twine>=6.1.0",
+]
+
+[tool.yapf]
+based_on_style = "pep8"
+split_before_named_assigns = false
+column_limit = 120
+dedent_closing_brackets = false
+join_multiple_lines = true
+indent_width = 4
+blank_line_before_nested_class_or_def = false
+
+[tool.mypy]
+ignore_missing_imports = true
+no_site_packages = true
+disable_error_code = "var-annotated"
+disallow_untyped_defs = true
+explicit_package_bases = true
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+lint.extend-select = ["I"]
+lint.fixable = ["I"]
+
+[tool.pytest.ini_options]
+addopts = "-vv"
+
+[tool.hatch.version]
+path = "dsc_toolkit/__init__.py"
+
+[project.scripts]
+dsc-toolkit = "dsc_toolkit.cli:main"
