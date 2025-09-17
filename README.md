@@ -74,6 +74,14 @@ dsc-toolkit render_orthophoto \
 	--save_dir /tmp/output
 ```
 
+## OpenDRIVE Map Support
+
+Plotting of OpenDRIVE map in `plot_annotations_3d` is supported through [esmini](https://github.com/esmini/esmini) and [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/):
+
+- download the latest [esmini release](https://github.com/esmini/esmini/releases)
+- add `esmini/bin` to your `$PATH`
+- install OpenSceneGraph: `sudo apt install openscenegraph`
+
 ## License
 
 This project is licensed under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for details.

@@ -15,7 +15,7 @@ from dsc_toolkit.utils.generic import (
     get_look_at_transform,
 )
 from dsc_toolkit.utils.io import load_data_meta
-from dsc_toolkit.utils.map import DiscretizedMap
+from dsc_toolkit.utils.map import load_map_as_obj
 from dsc_toolkit.utils.visuals import get_ann_visuals, set_camera_transform
 
 
@@ -118,9 +118,8 @@ def plot_annotations_3d(
         plotter.add(textured_mesh_visuals)
 
     if map_path is not None:
-        road_map = DiscretizedMap.load_from_file(map_path)
-        lane_visuals = road_map.get_lane_visuals()
-        plotter.add(lane_visuals)
+        map_visuals = load_map_as_obj(map_path)
+        plotter.add(map_visuals)
 
     if save_dir is not None:
         print(f'Screenshots will be saved in {save_dir}')

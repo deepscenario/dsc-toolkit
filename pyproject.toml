@@ -38,7 +38,6 @@ dependencies = [
     "pyproj (>=3.6,<4.0)",
     "open3d (>=0.19,<1.0)",
     "scipy (>=1.14,<2.0)",
-    "opendrive2lanelet (>=1.2,<2.0)",
 ]
 
 [project.urls]
