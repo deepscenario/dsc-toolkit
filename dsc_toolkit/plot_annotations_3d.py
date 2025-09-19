@@ -67,14 +67,13 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
 
 
 def load_obj(obj_path: str, plotter: vedo.Plotter) -> None:
-    if obj_path is not None:
-        assert os.path.isfile(obj_path), f'File not found: {obj_path}'
-        assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format: expected .obj, got {ext}'
+    assert os.path.isfile(obj_path), f'File not found: {obj_path}'
+    assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format: expected .obj, got {ext}'
 
-        visuals = vedo.load_obj(obj_path, texture_path=os.path.dirname(obj_path))
-        for visual in visuals:
-            visual.lighting(style='ambient')
-        plotter.add(visuals)
+    visuals = vedo.load_obj(obj_path, texture_path=os.path.dirname(obj_path))
+    for visual in visuals:
+        visual.lighting(style='ambient')
+    plotter.add(visuals)
 
 
 def set_initial_camera_pose(plotter: vedo.Plotter, anns_df: pd.DataFrame, relative_altitude: float) -> None:
