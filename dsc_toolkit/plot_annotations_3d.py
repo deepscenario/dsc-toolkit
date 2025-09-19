@@ -68,7 +68,7 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
 
 def load_obj(obj_path: str, plotter: vedo.Plotter) -> None:
     assert os.path.isfile(obj_path), f'File not found: {obj_path}'
-    assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format: expected .obj, got {ext}'
+    assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format for {obj_path}: expected .obj, got {ext}'
 
     visuals = vedo.load_obj(obj_path, texture_path=os.path.dirname(obj_path))
     for visual in visuals:
