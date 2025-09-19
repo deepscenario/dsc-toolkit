@@ -76,11 +76,31 @@ dsc-toolkit render_orthophoto \
 
 ## OpenDRIVE Map Support
 
-Plotting of OpenDRIVE map in `plot_annotations_3d` is supported through [esmini](https://github.com/esmini/esmini) and [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/):
+To plot an OpenDRIVE map in `plot_annotations_3d`, convert it to OBJ file format first:
 
-- download the latest [esmini release](https://github.com/esmini/esmini/releases)
-- add `esmini/bin` to your `$PATH`
-- install OpenSceneGraph: `sudo apt install openscenegraph`
+### Online OpenDRIVE Map Conversion
+
+- Navigate to [odrviewer](https://odrviewer.io/)
+- Disable **Center Map** in Parse Options
+- Click on **Open .xodr** and select your OpenDRIVE map
+- Click on **Export .obj**
+
+### Offline OpenDRIVE Map Conversion
+
+- Install OpenSceneGraph: `sudo apt install openscenegraph`
+- Download the latest [esmini release](https://github.com/esmini/esmini/releases)
+- Add `esmini/bin` to your `$PATH`
+- Convert the map to [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/) using esmini's `odrviewer`:
+
+```bash
+odrviewer --odr map.xodr --save_generated_model --headless --duration 0 --disable_log --disable_stdout
+```
+
+- Convert the generated OpenSceneGraph road to .obj:
+
+```bash
+osgconv generated_road.osgb map.obj --use-world-frame
+```
 
 ## License
 

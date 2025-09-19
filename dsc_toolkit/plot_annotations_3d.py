@@ -15,7 +15,6 @@ from dsc_toolkit.utils.generic import (
     get_look_at_transform,
 )
 from dsc_toolkit.utils.io import load_data_meta
-from dsc_toolkit.utils.map import load_map_as_obj
 from dsc_toolkit.utils.visuals import get_ann_visuals, set_camera_transform
 
 
@@ -67,6 +66,17 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
     return animate_fn
 
 
+def load_obj(obj_path: str, plotter: vedo.Plotter) -> None:
+    if obj_path is not None:
+        assert os.path.isfile(obj_path), f'File not found: {obj_path}'
+        assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format: expected .obj, got {ext}'
+
+        visuals = vedo.load_obj(obj_path, texture_path=os.path.dirname(obj_path))
+        for visual in visuals:
+            visual.lighting(style='ambient')
+        plotter.add(visuals)
+
+
 def set_initial_camera_pose(plotter: vedo.Plotter, anns_df: pd.DataFrame, relative_altitude: float) -> None:
     anns_center = anns_df[['translation_x', 'translation_y', 'translation_z']].mean().to_numpy()
     eye = anns_center + np.array([0, 0, relative_altitude])
@@ -112,14 +122,10 @@ def plot_annotations_3d(
     plotter.background(background_color)
 
     if mesh_path is not None:
-        textured_mesh_visuals = vedo.load_obj(mesh_path, texture_path=os.path.dirname(mesh_path))
-        for mesh_visual in textured_mesh_visuals:
-            mesh_visual.lighting(style='ambient')
-        plotter.add(textured_mesh_visuals)
+        load_obj(mesh_path, plotter)
 
     if map_path is not None:
-        map_visuals = load_map_as_obj(map_path)
-        plotter.add(map_visuals)
+        load_obj(map_path, plotter)
 
     if save_dir is not None:
         print(f'Screenshots will be saved in {save_dir}')
@@ -148,7 +154,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument('--data_dir', help='Directory that contains the released data', type=str, required=True)
     parser.add_argument('--recording', help='Recording to plot', type=str, dest='recording_id', required=True)
     parser.add_argument('--save_dir', help='Directory where the rendered images are saved', type=str)
-    parser.add_argument('--map', help='Path to the OpenDRIVE map', dest='map_path', type=str)
+    parser.add_argument('--map', help='Path to the OpenDRIVE map in .obj format', dest='map_path', type=str)
     parser.add_argument('--mesh', help='Path to the textured mesh', dest='mesh_path', type=str)
     parser.add_argument('--relative_altitude', help='Relative altitude of camera [m]', type=float, default=100)
     parser.add_argument('--headless', help='Do not show the visualizer', action='store_true')
