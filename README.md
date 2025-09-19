@@ -76,31 +76,43 @@ dsc-toolkit render_orthophoto \
 
 ## OpenDRIVE Map Support
 
-To plot an OpenDRIVE map in `plot_annotations_3d`, convert it to OBJ file format first:
+To visualize an OpenDRIVE map in `plot_annotations_3d`, you need to first convert it to [OBJ format](https://en.wikipedia.org/wiki/Wavefront_.obj_file). Choose from the online method or offline method:
 
-### Online OpenDRIVE Map Conversion
+### Method 1: Online Conversion
 
-- Navigate to [odrviewer](https://odrviewer.io/)
-- Disable **Center Map** in Parse Options
-- Click on **Open .xodr** and select your OpenDRIVE map
-- Click on **Export .obj**
+1. Navigate to [odrviewer.io](https://odrviewer.io/)
+2. In Parse Options, disable **"Center Map"**
+3. Click **"Open .xodr"** and select your OpenDRIVE file
+4. Click **"Export .obj"** to download the converted file
 
-### Offline OpenDRIVE Map Conversion
+### Method 2: Offline Conversion
 
-- Install OpenSceneGraph: `sudo apt install openscenegraph`
-- Download the latest [esmini release](https://github.com/esmini/esmini/releases)
-- Add `esmini/bin` to your `$PATH`
-- Convert the map to [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/) using esmini's `odrviewer`:
+This method relies on [esmini](https://github.com/esmini/esmini) and [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/):
 
+#### Prerequisites
 ```bash
-odrviewer --odr map.xodr --save_generated_model --headless --duration 0 --disable_log --disable_stdout
+# Install OpenSceneGraph
+sudo apt install openscenegraph
+
+# Download and set up esmini
+wget https://github.com/esmini/esmini/releases/latest/download/esmini-demo_ubuntu-latest.zip
+unzip esmini-demo_ubuntu-latest.zip
+export PATH=$PATH:$(pwd)/esmini/bin
 ```
 
-- Convert the generated OpenSceneGraph road to .obj:
+#### Conversion Steps
 
-```bash
-osgconv generated_road.osgb map.obj --use-world-frame
-```
+1. **Generate OpenSceneGraph model** from your OpenDRIVE file:
+   ```bash
+   odrviewer --odr map.xodr --save_generated_model --headless --duration 0 --disable_log --disable_stdout
+   ```
+
+2. **Convert to OBJ format**:
+   ```bash
+   osgconv generated_road.osgb map.obj --use-world-frame
+   ```
+
+The resulting `map.obj` file can now be used with `plot_annotations_3d`.
 
 ## License
 
