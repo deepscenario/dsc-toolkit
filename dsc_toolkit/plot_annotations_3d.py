@@ -66,14 +66,14 @@ def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.
     return animate_fn
 
 
-def load_obj(obj_path: str, plotter: vedo.Plotter) -> None:
+def load_obj(obj_path: str) -> list[vedo.Mesh]:
     assert os.path.isfile(obj_path), f'File not found: {obj_path}'
     assert (ext := os.path.splitext(obj_path)[1]) == '.obj', f'Invalid format for {obj_path}: expected .obj, got {ext}'
 
     visuals = vedo.load_obj(obj_path, texture_path=os.path.dirname(obj_path))
     for visual in visuals:
         visual.lighting(style='ambient')
-    plotter.add(visuals)
+    return visuals
 
 
 def set_initial_camera_pose(plotter: vedo.Plotter, anns_df: pd.DataFrame, relative_altitude: float) -> None:
@@ -121,10 +121,12 @@ def plot_annotations_3d(
     plotter.background(background_color)
 
     if mesh_path is not None:
-        load_obj(mesh_path, plotter)
+        mesh_visuals = load_obj(mesh_path)
+        plotter.add(mesh_visuals)
 
     if map_path is not None:
-        load_obj(map_path, plotter)
+        map_visuals = load_obj(map_path)
+        plotter.add(map_visuals)
 
     if save_dir is not None:
         print(f'Screenshots will be saved in {save_dir}')
