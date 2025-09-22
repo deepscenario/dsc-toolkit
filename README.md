@@ -74,14 +74,14 @@ dsc-toolkit render_orthophoto \
 	--save_dir /tmp/output
 ```
 
-## OpenDRIVE Map Support
+## OpenDRIVE Map Visualization
 
-To visualize an OpenDRIVE map in `plot_annotations_3d`, you need to first convert it to [OBJ format](https://en.wikipedia.org/wiki/Wavefront_.obj_file). Choose from the online method or offline method:
+To visualize an OpenDRIVE map in `plot_annotations_3d`, you need to first convert it to [OBJ format](https://en.wikipedia.org/wiki/Wavefront_.obj_file). Choose one of the following methods:
 
 ### Method 1: Online Conversion
 
 1. Navigate to [odrviewer.io](https://odrviewer.io/)
-2. In Parse Options, disable **"Center Map"**
+2. In **"Parse Options"**, disable **"Center Map"**
 3. Click **"Open .xodr"** and select your OpenDRIVE file
 4. Click **"Export .obj"** to download the converted file
 
