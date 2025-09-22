@@ -74,6 +74,46 @@ dsc-toolkit render_orthophoto \
 	--save_dir /tmp/output
 ```
 
+## OpenDRIVE Map Visualization
+
+To visualize an OpenDRIVE map in `plot_annotations_3d`, you need to first convert it to [OBJ format](https://en.wikipedia.org/wiki/Wavefront_.obj_file). Choose one of the following methods:
+
+### Method 1: Online Conversion
+
+1. Navigate to [odrviewer.io](https://odrviewer.io/)
+2. In **"Parse Options"**, disable **"Center Map"**
+3. Click **"Open .xodr"** and select your OpenDRIVE file
+4. Click **"Export .obj"** to download the converted file
+
+### Method 2: Offline Conversion
+
+This method relies on [esmini](https://github.com/esmini/esmini) and [OpenSceneGraph](https://openscenegraph.github.io/openscenegraph.io/):
+
+#### Prerequisites
+```bash
+# Install OpenSceneGraph
+sudo apt install openscenegraph
+
+# Download and set up esmini
+wget https://github.com/esmini/esmini/releases/latest/download/esmini-demo_ubuntu-latest.zip
+unzip esmini-demo_ubuntu-latest.zip
+export PATH=$PATH:$(pwd)/esmini/bin
+```
+
+#### Conversion Steps
+
+1. **Generate OpenSceneGraph model** from your OpenDRIVE file:
+   ```bash
+   odrviewer --odr map.xodr --save_generated_model --headless --duration 0 --disable_log --disable_stdout
+   ```
+
+2. **Convert to OBJ format**:
+   ```bash
+   osgconv generated_road.osgb map.obj --use-world-frame
+   ```
+
+The resulting `map.obj` file can now be used with `plot_annotations_3d`.
+
 ## License
 
 This project is licensed under the Apache License 2.0. See [LICENSE.txt](LICENSE.txt) for details.

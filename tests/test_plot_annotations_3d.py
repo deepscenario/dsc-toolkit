@@ -7,7 +7,7 @@ from dsc_toolkit.plot_annotations_3d import main
 from dsc_toolkit.utils.generic import filter_by_frame_range
 
 
-def test_main_function(data_dir: str, recording_id: str, mesh_path: str, map_path: str, tmp_path: Path,
+def test_main_function(data_dir: str, recording_id: str, mesh_path: str, map_path_obj: str, tmp_path: Path,
                        frames_df: pd.DataFrame, show: bool) -> None:
     frame_range = (10, 20)
     headless = '--headless' if not show else ''
@@ -15,7 +15,7 @@ def test_main_function(data_dir: str, recording_id: str, mesh_path: str, map_pat
     --data_dir {data_dir}
     --recording {recording_id}
     --mesh {mesh_path}
-    --map {map_path}
+    --map {map_path_obj}
     --save_dir {str(tmp_path)}
     --frame_range {frame_range[0]} {frame_range[1]}
     {headless}

@@ -39,8 +39,13 @@ def mesh_path(data_dir: str) -> str:
 
 
 @pytest.fixture
-def map_path(data_dir: str) -> str:
+def map_path_xodr(data_dir: str) -> str:
     return os.path.join(data_dir, 'map', 'map.xodr')
+
+
+@pytest.fixture
+def map_path_obj(data_dir: str) -> str:
+    return os.path.join(data_dir, 'map', 'map.obj')
 
 
 @pytest.fixture
