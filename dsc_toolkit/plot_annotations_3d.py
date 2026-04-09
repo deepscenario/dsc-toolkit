@@ -18,14 +18,18 @@ from dsc_toolkit.utils.io import load_data_meta
 from dsc_toolkit.utils.visuals import get_ann_visuals, set_camera_transform
 
 
-def make_animate_fn(plotter: vedo.Plotter, anns_df: pd.DataFrame, frames_df: pd.DataFrame,
-                    save_dir: str | None) -> Callable:
+def make_animate_fn(
+    plotter: vedo.Plotter,
+    anns_df: pd.DataFrame,
+    frames_df: pd.DataFrame,
+    save_dir: str | None,
+) -> Callable:
     frame_idx = 0
     visuals_curr = []
     pbar = tqdm(total=len(frames_df), desc='Visualizing frames', unit='frame')
     anns_df_grouped = anns_df.groupby('frame_id')
 
-    def animate_fn(event: vedo.plotter.Event) -> None:
+    def animate_fn(event: vedo.plotter.events.Event) -> None:
         nonlocal frame_idx
         if frame_idx >= len(frames_df):
             plotter.close()
